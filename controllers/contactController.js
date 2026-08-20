@@ -1,9 +1,20 @@
 const Contact = require("../models/contactModel");
 
 exports.getAllContacts = async (req, res) => {
-
+    const {name} = req.query;
+    
     try{
-        const contacts = await Contact.getAllContacts();
+        const contacts = await Contact.getAllContacts(name);
+        res.json(contacts);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to retrieve contacts" , error: error.message });
+    }   
+
+};
+exports.getContactsCount = async (req, res) => {
+    
+    try{
+        const contacts = await Contact.getContactsCount();
         res.json(contacts);
     } catch (error) {
         res.status(500).json({ error: "Failed to retrieve contacts" , error: error.message });
@@ -29,8 +40,16 @@ exports.getContactById = async (req, res) => {
 };
 
 exports.createContact = async (req, res) => {
-
+    const emailrg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const contactData = req.body;
+    const {name,email} = req.body;
+    if(!name || !email){
+        res.status(422).json({error: "Name & Email is Required"});
+    }
+    if(!emailrg.test(email)){
+        
+        res.status(422).json({error: "Email is not applicable"});
+    }
 
     try{
         const newContact = await Contact.createContact(contactData);

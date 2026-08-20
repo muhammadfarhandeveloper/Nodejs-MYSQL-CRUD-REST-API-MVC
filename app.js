@@ -1,7 +1,19 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
+
+const MiddlewareCheckfun = require('./middelware/middleware')
+
+// all methods and * 
+const options = {
+  origin: ['http://theproviders.tech/','https://www.smartsecure.pk/'],
+  methods: ['GET']
+}
+app.use(cors(options));
 
 app.use(express.json());
+
+// app.use(MiddlewareCheckfun)
 
 const userRoutes = require("./routes/userRoutes");
 const contactRoutes = require("./routes/contactRoutes");
